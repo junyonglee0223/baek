@@ -1,4 +1,4 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 #include <string>
 #include <vector>
 
@@ -7,7 +7,7 @@ using namespace std;
 int K, R, C;
 int dx[4] = {1, 0, 0, -1};
 int dy[4] = {0, -1, 1, 0};
-//1, 0    0, -1  0, 1   -1, 0
+// 1, 0    0, -1  0, 1   -1, 0
 char c[4] = {'d', 'l', 'r', 'u'};
 
 // string bfs(int sx, int sy, int gx, int gy){
@@ -35,39 +35,67 @@ char c[4] = {'d', 'l', 'r', 'u'};
 // }
 string answer;
 
- void dfs(int x, int y, int gx, int gy, string str){
-    if(answer != "")return;
-    if(str.size() == K && x == gx && y == gy)
+void dfs(int x, int y, int gx, int gy, string str)
+{
+    if (answer != "")
+        return;
+    if (str.size() == K && x == gx && y == gy)
         answer = str;
-    if(str.size() == K)
+    if (str.size() == K)
         return;
 
-    for(int i = 0; i<4; i++){
+    for (int i = 0; i < 4; i++)
+    {
         int nx = x + dx[i];
         int ny = y + dy[i];
-        if(0<=nx && nx<R && 0<=ny && ny < C){
+        if (0 <= nx && nx < R && 0 <= ny && ny < C)
+        {
             dfs(nx, ny, gx, gy, str + c[i]);
-        } 
+        }
     }
-
 }
 
-
-string solution(int n, int m, int x, int y, int r, int c, int k) {
+string solution(int n, int m, int x, int y, int r, int c, int k)
+{
     answer = "";
     K = k;
     R = n;
     C = m;
-    //answer = bfs(x-1, y-1, r-1, c-1);
-    dfs(x-1, y-1, r-1, c-1, "");
+    // answer = bfs(x-1, y-1, r-1, c-1);
+    dfs(x - 1, y - 1, r - 1, c - 1, "");
 
-
-    if(answer == "")
+    if (answer == "")
         answer = "impossible";
     return answer;
 }
 
+char dir_char[4] = {'d', 'l', 'r', 'u'};
+int dx[4] = {1, 0, 0, -1};
+int dy[4] = {0, -1, 1, 0};
+int k;
 
+
+int dfs1(int x, int y, int gx, int gy, string str){
+    
+
+
+
+}
+
+
+string solution(int n, int m, int x, int y, int r, int c, int k)
+{
+    answer = "";
+    K = k;
+    R = n;
+    C = m;
+    // answer = bfs(x-1, y-1, r-1, c-1);
+    dfs(x - 1, y - 1, r - 1, c - 1, "");
+
+    if (answer == "")
+        answer = "impossible";
+    return answer;
+}
 
 /*
 
@@ -77,7 +105,7 @@ def solution(n, m, x, y, r, c, k):
     k -= dist
     if k < 0 or k%2 != 0:
         return "impossible"
-    
+
     direction = {'d':0, 'l':0, 'r':0, 'u':0}
     if x > r:
         direction['u'] += x-r
@@ -87,25 +115,24 @@ def solution(n, m, x, y, r, c, k):
         direction['l'] += y-c
     else:
         direction['r'] += c-y
-        
+
     answer += 'd'*direction['d']
     d = min(int(k/2), n-(x+direction['d']))
     answer += 'd'*d
     direction['u'] += d
     k -= 2*d
-    
+
     answer += 'l'*direction['l']
     l = min(int(k/2), y-direction['l']-1)
     answer += 'l'*l
     direction['r'] += l
     k -= 2*l
-    
+
     answer += 'rl'*int(k/2)
     answer += 'r'*direction['r']
     answer += 'u'*direction['u']
     return answer
 */
-
 
 /*
 #include <bits/stdc++.h>
@@ -140,11 +167,9 @@ string solution(int n, int m, int x, int y, int r, int c, int k) {
     answer += string(k / 2, 'l');
     answer += string(direction['r'], 'r');
     answer += string(direction['u'], 'u');
-    
+
     return answer;
 }
 
 
 */
-
-
