@@ -1,7 +1,6 @@
 package g2252;
 
 import java.util.*;
-
 public class Solution {
     static int N, M;
     static List<List<Integer>>graph;
