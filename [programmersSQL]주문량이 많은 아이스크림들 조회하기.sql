@@ -1,0 +1,15 @@
+-- [programmersSQL]주문량이 많은 아이스크림들 조회하기.sql
+SELECT F.FLAVOR
+FROM FIRST_HALF F
+    INNER JOIN 
+    (
+        SELECT FLAVOR, SUM(TOTAL_ORDER) AS SUM_TOTAL_ORDER
+        FROM JULY
+        GROUP BY FLAVOR
+    ) J
+    ON F.FLAVOR = J.FLAVOR
+ORDER BY (F.TOTAL_ORDER + J.SUM_TOTAL_ORDER) DESC
+LIMIT 3;
+
+
+
