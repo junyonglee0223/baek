@@ -1,0 +1,14 @@
+-- [programmersSQL] FrontEnd 개발자 찾기
+SELECT
+    D.ID,
+    D.EMAIL,
+    D.FIRST_NAME,
+    D.LAST_NAME
+FROM DEVELOPERS D
+WHERE EXISTS (
+    SELECT 1
+    FROM SKILLCODES S
+    WHERE S.CATEGORY = 'Front End'
+      AND (D.SKILL_CODE & S.CODE) != 0
+)
+ORDER BY D.ID;
