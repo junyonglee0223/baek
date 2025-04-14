@@ -29,8 +29,6 @@ void solution_sort_card_v1(){
         pq.push(tmp_sum);
     }
 
-    answer += pq.top();
-
     cout<<answer<<endl;
 }
 
