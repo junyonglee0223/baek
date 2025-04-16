@@ -1,4 +1,5 @@
 package s3273;
+//s3273 두 수의 합
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,13 +9,29 @@ import java.util.StringTokenizer;
 
 public class Main {
 
+    static int m_binary_search_idx(int[] arr, int value){
+        int start = 0;
+        int end = arr.length - 1;
+
+        while(start < end){
+            int mid = (start + end) >> 1;
+            if(arr[mid] < value){
+                start = mid + 1;
+            }
+            else{
+                end = mid;
+            }
+        }
+        return end;
+    }
+
     static int find_pair(int[] arr, int target){
         int ret = 0;
         for (int j : arr) {
             int idx = Arrays.binarySearch(arr, target - j);
-            if (idx >= 0){
+            int tmp_idx = m_binary_search_idx(arr, target - j);
+            if (arr[tmp_idx] == target - j){
                 ret++;
-                //System.out.println(j + " " + arr[idx]);//test
             }
         }
         return ret/2;
