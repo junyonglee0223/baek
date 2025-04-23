@@ -124,16 +124,104 @@ void solution_color_ball(){
 
 }
 
+/****************************************** */
+
+struct Ball{
+    int idx, color, weight;
+    Ball(int idx, int color, int weight){
+        this->idx = idx;
+        this->color = color;
+        this->weight = weight;
+    }
+};
+bool compare_ball(Ball &a, Ball &b){
+    return a.weight < b.weight;
+}
+void solution_color_ball_v1(){
+    int n; cin>>n;
+
+    vector<int>color_idx(200001, -1);
+    vector<Ball>s_balls;
+    vector<pair<int,int>>balls;
+
+    int color_idx_cnt = 0;
+    for(int i = 0; i<n; i++){
+        int a, b; cin>>a>>b;
+        if(color_idx[a] == -1){
+            color_idx[a] = color_idx_cnt++;
+        }
+        balls.push_back({b, color_idx[a]});
+        
+        s_balls.push_back(Ball(i, color_idx[a], b));
+    }
+
+    sort(balls.begin(), balls.end());
+    sort(s_balls.begin(), s_balls.end(), compare_ball);
+
+
+    int tot_sum = 0;
+    int tot_sum_dup = 0;
+    vector<int>tot_visited;
+
+    vector<int>color_sum(color_idx_cnt, 0);
+    vector<int>color_sum_dup(color_idx_cnt, 0);
+    vector<vector<int>>color_visited(color_idx_cnt);
+
+
+    vector<int>ret(n, 0);
+
+    for(int i = 0; i<n; i++){
+        int c = s_balls[i].color;
+        int w = s_balls[i].weight;
+        int idx = s_balls[i].idx;
+
+        if(!tot_visited.empty() && tot_visited[tot_visited.size() - 1] == w){
+            tot_sum_dup++;
+
+        }else{
+            if(tot_sum_dup > 0){
+                tot_sum += tot_sum_dup * tot_visited[tot_visited.size() - 1];
+            }
+            tot_visited.push_back(w);
+            tot_sum_dup = 1;
+        }
+
+        int t_w = tot_sum;
+
+        if(!color_visited[c].empty() && color_visited[c][color_visited[c].size() - 1] == w){
+            color_sum_dup[c]++;
+        }
+        else{
+            if(color_sum_dup[c] > 0){
+                color_sum[c] += color_sum_dup[c] * color_visited[c][color_visited[c].size() - 1];
+            }
+            color_visited[c].push_back(w);
+            color_sum_dup[c] = 1;
+        }
+
+        int c_w = color_sum[c];
+
+        ret[idx] = t_w - c_w;
+    }
+
+    for(int i = 0; i<n; i++){
+        cout<<ret[i]<<endl;
+    }
+}
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
     //test_find_idx();
     
-    solution_color_ball();
+    //solution_color_ball();
+    solution_color_ball_v1();
+    
     // int T; cin>>T;
     // while(T--){
-    //     solution_color_ball();
+    //     //solution_color_ball();
+    //     solution_color_ball_v1();
     // }
 
     return 0;
