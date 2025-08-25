@@ -1,0 +1,134 @@
+package g15671 오델로;
+
+import java.io.*;
+import java.util.StringTokenizer;
+
+public class Main {
+    static int[] dx = {1, 1, 0, -1, -1, -1, 0, 1};
+    static int[] dy = {0, 1, 1, 1, 0, -1, -1, -1};
+
+    static final int N = 6;
+    static Character[][] board;
+
+    static boolean is_range(int x, int y){
+        return x > 0 && x <= N && y > 0 && y <= N;
+    }
+
+    static boolean is_exist_other(int x, int y, int dir, char c){
+        char cur = (c != 'B') ? 'W' : 'B';
+        char target = (c == 'B') ? 'W': 'B';//flag 0 = B -> W
+
+        int nx = x + dx[dir];
+        int ny = y + dy[dir];
+        while(is_range(nx, ny) && board[nx][ny] == target){
+            nx += dx[dir];
+            ny += dy[dir];
+        }
+        return is_range(nx, ny) && board[nx][ny] == cur;
+    }
+    static void update_board(int x, int y, int dir, char c){
+        char cur = (c != 'B') ? 'W' : 'B';
+        char target = (c == 'B') ? 'W' : 'B';
+
+        int nx = x + dx[dir];
+        int ny = y + dy[dir];
+        while(is_range(nx, ny) && board[nx][ny] == target){
+            board[nx][ny] = cur;
+            nx += dx[dir];
+            ny += dy[dir];
+        }
+    }
+
+
+    static String solution_othello(BufferedReader br) throws IOException{
+        int cmd = Integer.parseInt(br.readLine());
+        board = new Character[N+1][N+1];
+        for(int i = 1; i<=N; i++){
+            for(int j = 1; j<=N; j++){
+                board[i][j] = '.';
+            }
+        }
+        board[3][3] = board[4][4] = 'W';
+        board[3][4] = board[4][3] = 'B';
+
+        StringTokenizer st;
+        for(int i = 0; i<cmd ;i++){
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+
+            char c = (i % 2 == 0) ? 'B' : 'W';
+            board[a][b] = c;
+            for(int d = 0; d < 8; d++){
+                if(is_exist_other(a, b, d, c)){
+                    update_board(a, b, d, c);
+                }
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+
+        for(int i = 1; i<=N; i++){
+            for(int j = 1; j<=N; j++){
+                sb.append(board[i][j]);
+            }
+            sb.append("\n");
+        }
+
+        int b_cnt = 0, w_cnt = 0;
+        for(int i = 1; i<=N; i++){
+            for(int j = 1; j<=N; j++){
+                if(board[i][j] == 'B'){
+                    b_cnt++;
+                }else if(board[i][j] == 'W'){
+                    w_cnt++;
+                }
+            }
+        }
+        if(b_cnt > w_cnt)sb.append("Black").append("\n");
+        else sb.append("White").append("\n");
+
+        return sb.toString();
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        bw.write(solution_othello(br));
+        bw.flush();
+        bw.close();
+
+
+
+
+    }
+}
+
+
+/*
+6
+3 2
+4 2
+5 3
+2 2
+2 1
+3 5
+*/
+/*
+......
+BW....
+.BWWW.
+.WBW..
+..B...
+......
+White
+ */
+
+/*
+오델로 규칙을 잘 알지는 못하지만
+돌을 놓을 수 있는 위치가 어느정도 제약이 있다.
+해당 돌을 놓은 위치에서 8방향으로 다른 색의 돌을 모두 변경하면 되는지?
+
+find, update 두가지 함수로 구현 가능할 듯
+
+ */
