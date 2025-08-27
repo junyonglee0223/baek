@@ -2,9 +2,7 @@ package sw3124_최소스패닝트리;
 //:mag: SW3124_MST_이준용.java
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Solution {
     static int V, E;
@@ -43,7 +41,7 @@ public class Solution {
         return true;
     }
 
-    static long solution_minimum_spanning_tree(BufferedReader br) throws IOException{
+    static long solution_minimum_spanning_tree_v1(BufferedReader br) throws IOException{
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         V = Integer.parseInt(st.nextToken());
@@ -87,6 +85,112 @@ public class Solution {
             }
         }
         return minValue;
+    }
+    static long solution_minimum_spanning_tree_v2(BufferedReader br) throws IOException{
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        V = Integer.parseInt(st.nextToken());
+        E = Integer.parseInt(st.nextToken());
+        List<List<int[]>> adj = new ArrayList<>();
+        for(int i = 0; i<V; i++){
+            adj.add(new ArrayList<>());
+        }
+        for(int i = 0; i<E; i++){
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            int w = Integer.parseInt(st.nextToken());
+            a--; b--;
+            adj.get(a).add(new int[]{b, w});
+            adj.get(b).add(new int[]{a, w});
+        }
+        boolean[] visited = new boolean[V];
+        long[] minDist = new long[V];
+        for(int i = 0; i<V; i++){
+            minDist[i] = Long.MAX_VALUE;
+        }
+        minDist[0] = 0;
+
+        long ret = 0;
+        for(int t = 0; t < V; t++){
+            long best = Long.MAX_VALUE;
+            int idx = -1;
+            for(int i = 0; i<V; i++){
+                if(visited[i])continue;
+                if(minDist[i] < best){
+                    best = minDist[i];
+                    idx = i;
+                }
+            }
+
+            visited[idx] = true;
+            minDist[idx] = best;
+            ret += best;
+
+
+            for(int[] nxt_node : adj.get(idx)){
+                int nxt = nxt_node[0];
+                if(visited[nxt])continue;
+                minDist[nxt] = Math.min(minDist[nxt], nxt_node[1]);
+            }
+        }
+        return ret;
+    }
+    static long solution_minimum_spanning_tree(BufferedReader br) throws IOException{
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        V = Integer.parseInt(st.nextToken());
+        E = Integer.parseInt(st.nextToken());
+        List<List<int[]>> adj = new ArrayList<>();
+        for(int i = 0; i<V; i++){
+            adj.add(new ArrayList<>());
+        }
+        for(int i = 0; i<E; i++){
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            int w = Integer.parseInt(st.nextToken());
+            a--; b--;
+            adj.get(a).add(new int[]{b, w});
+            adj.get(b).add(new int[]{a, w});
+        }
+
+        boolean[] visited = new boolean[V];
+        long[] minDist = new long[V];
+
+        for(int i = 0; i<V; i++){
+            minDist[i] = Long.MAX_VALUE;
+        }
+        minDist[0] = 0;
+        long ret = 0;
+
+        PriorityQueue<int[]>pq = new PriorityQueue<>(new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return Integer.compare(o1[0], o2[0]);
+            }
+        });
+        pq.add(new int[]{0, 0});
+        int loop_cnt = 0;
+        while(!pq.isEmpty() && loop_cnt < V){
+            int[] cur_node = pq.poll();
+            int cur = cur_node[1];
+            int cost = cur_node[0];
+            if(visited[cur])continue;
+            visited[cur] = true;
+            ret += cost;
+            loop_cnt++;
+
+            for(int[] nxt_node : adj.get(cur)){
+                int nxt = nxt_node[0];
+                int weight = nxt_node[1];
+                if(visited[nxt])continue;
+                pq.add(new int[]{weight, nxt});
+            }
+        }
+
+
+        return ret;
     }
 
     public static void main(String[] args) throws IOException {
