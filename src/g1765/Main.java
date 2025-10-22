@@ -128,10 +128,10 @@ public class Main {
 
         int answer = count_group.size();
 
-        for(int i = 1; i<=n; i++){
-            System.out.print(parents[i] + " ");
-        }
-        System.out.println();
+        // for(int i = 1; i<=n; i++){
+        //     System.out.print(parents[i] + " ");
+        // }
+        // System.out.println();
 
         // for(int ele : count_group){
         //     ///////////////////////////////////////////////////
