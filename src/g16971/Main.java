@@ -13,30 +13,6 @@ public class Main {
         return false;
     }
 
-    static int change_value_row(int x1, int x2, int[][] board, int[][] weight, int prev_sum){
-        int m = board[0].length;
-        int ret = 0;
-        for(int i = 0; i<m; i++){
-            ret += board[x1][i] * weight[x2][i];
-        }
-        for(int i = 0; i<m; i++){
-            ret += board[x2][i] * weight[x1][i];
-        }
-        return ret - prev_sum;
-    }
-    
-    static int change_value_col(int y1, int y2, int[][] board, int[][] weight, int prev_sum){
-        int n = board.length;
-        int ret = 0;
-        for(int i = 0; i<n; i++){
-            ret += board[i][y1] * weight[i][y2];
-        }
-        for(int i = 0; i<n; i++){
-            ret += board[i][y2] * weight[i][y1];
-        }
-        return ret - prev_sum;
-    }
-
     static int solution_value_of_array_b(BufferedReader br) throws Exception{
         StringTokenizer st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(st.nextToken());
@@ -67,50 +43,37 @@ public class Main {
         int[] row_val = new int[n];
         int[] col_val = new int[m];
         int tot_ret = 0;
+        int row_inside_min = Integer.MAX_VALUE;
+        int col_inside_min = Integer.MAX_VALUE;
 
         for(int i = 0; i<n; i++){
             for(int j = 0; j<m; j++){
                 row_val[i] += (board[i][j] * weight[i][j]);
             }
             tot_ret += row_val[i];
+            if(i != 0 && i != n-1){
+                row_inside_min = Math.min(row_inside_min, row_val[i]);
+            }
         }
         
         for(int i = 0; i<m; i++){
             for(int j = 0; j<n; j++){
                 col_val[i] += (board[j][i] * weight[j][i]);
             }
+            if(i != 0 && i != m-1){
+                col_inside_min = Math.min(col_inside_min, col_val[i]);
+            }
         }
 
-        int ret = tot_ret;
-        if(n > 2){
-            int row_ret = tot_ret;
-            List<Integer>row_list = new ArrayList<>();
-            for(int i = 1; i<n-1; i++){
-                row_list.add(row_val[i]);
-            }
-            Collections.sort(row_list);
-            int max_side = Math.max(row_val[0], row_val[n-1]);
-            if(max_side * 2 > row_list.get(0)){
-                row_ret = (tot_ret - row_list.get(0) + (max_side + row_list.get(0) / 2));
-            }
-            ret = Math.max(ret, row_ret);
-        }    
+        int row_side_max = Math.max(row_val[0], row_val[n-1]);
+        int row_change_val = (row_inside_min != Integer.MAX_VALUE ? (row_side_max - row_inside_min / 2):0);
 
-        if(m > 2){
-            int col_ret = tot_ret;
-            List<Integer>col_list = new ArrayList<>();
-            for(int i = 1; i<m-1; i++){
-                col_list.add(col_val[i]);
-            }
-            Collections.sort(col_list);
-            int max_side = Math.max(col_val[0], col_val[m-1]);
-            if(max_side * 2 > col_list.get(0)){
-                col_ret = (tot_ret - col_list.get(0) + (max_side + col_list.get(0) / 2));
-            }
-            ret = Math.max(ret, col_ret);
-        }
-        return ret;
+        int col_side_max = Math.max(col_val[0], col_val[m-1]);
+        int col_change_val = (col_inside_min != Integer.MAX_VALUE ? (col_side_max - col_inside_min / 2) : 0);
+
+        return tot_ret + Math.max(0, Math.max(col_change_val, row_change_val));
     }
+
 
     public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -145,6 +108,9 @@ row 기준으로 다시 생각
 0, n-1 중 큰 값의 2배가
 1 ~ n-2 행 의 가장 작은 값보다 크다면 교환하는게 이득
 
+내부 row, col 중 최솟값을 찾는 로직을 정렬하는 과정 대신 처음 입력할 때 traking 하여 저장하면
+이후 nlogn의 시간 복잡도가 사라진다.
+유의미한 차이가 나지는 않음
 
 
  */
