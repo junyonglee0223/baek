@@ -20,7 +20,8 @@ public class Main {
 
     static boolean canEat(int day) {
         long total = 0;
-        int idx = 0; 
+        int idx = 0;
+        int removable = K;  // K 값을 지역 변수로 복사
 
         for (int i = 0; i < N; i++) {
             Node cur = nodes[i];
@@ -29,23 +30,21 @@ public class Main {
 
             if (cur.o == 1) {
                 temp[idx++] = bacteria;
-                total += bacteria;
-            } else {
-                total += bacteria; 
             }
+            total += bacteria;
         }
 
         if (total <= G) {
             return true;
         }
 
-        if (K == 0) {
+        if (removable == 0) {
             return false;
         }
 
         Arrays.sort(temp, 0, idx);
 
-        for (int i = idx - 1; i >= 0 && K > 0; i--, K--) {
+        for (int i = idx - 1; i >= 0 && removable > 0; i--, removable--) {
             total -= temp[i];
             if (total <= G) {
                 return true;
@@ -54,6 +53,7 @@ public class Main {
 
         return total <= G;
     }
+
 
     static int solution_seongsipdang_meal_kit(BufferedReader br) throws Exception {
         StringTokenizer st = new StringTokenizer(br.readLine());
