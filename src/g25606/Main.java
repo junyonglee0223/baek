@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Main {
 
-    static void solutionRainySeason(int n, int q, int m, int[] buckets, List<int[]>querys){
+    static String solutionRainySeason(int n, int q, int m, int[] buckets, List<int[]>querys){
         
         int[] declineVal = new int[n];
         int[] declineSum = new int[n];
@@ -34,29 +34,41 @@ public class Main {
             if(decIdx + shareVal < n){
                 declineVal[decIdx + shareVal] += remainVal;
             }
-            if(i == 0)declineSum[i] = declineVal[i];
-            else declineSum[i] = declineSum[i-1] + declineVal[i];
+            if(i == 0){
+                bucketSum[i] = buckets[i];
+                declineSum[i] = declineVal[i];
+            }
+            else{
+                bucketSum[i] = bucketSum[i-1] + buckets[i];
+                declineSum[i] = declineSum[i-1] + declineVal[i];
+            } 
+            
         }
 
+        StringBuilder sb = new StringBuilder();
 
-    
         for(int[] query : querys){
             int com = query[0];
             int val = query[1] - 1;
             if(com == 1){
-                System.out.println(bucketSum[val] - declineSum[val]);
+                int tmpVal = bucketSum[val] - declineSum[val];
+                sb.append(tmpVal).append("\n");
             }else{
                 int tmpVal = 0;
                 if(val == 0) tmpVal = declineSum[0];
                 else tmpVal = declineSum[val] - declineSum[val-1];
 
-                System.out.println(tmpVal);
+                sb.append(tmpVal).append("\n");
             }
         }
+
+        return sb.toString();
     }
 
-    
-    static void monoMain(BufferedReader br) throws IOException{
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
         StringTokenizer st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(st.nextToken());
         int m = Integer.parseInt(st.nextToken());
@@ -78,19 +90,12 @@ public class Main {
             querys.add(new int[]{a, t});
         }
 
-        solutionRainySeason(n, q, m, buckets, querys);
-    }
+        String ret = solutionRainySeason(n, q, m, buckets, querys);
+        bw.write(ret);
+        bw.flush();
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        // int T = Integer.parseInt(br.readLine());
-        // while(T-- > 0){
-        //     System.out.println("-------------------------");
-        //     monoMain(br);
-        // }
-
-        monoMain(br);
+        bw.close();
+        br.close();
     }
 }
 
